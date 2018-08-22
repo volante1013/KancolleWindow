@@ -43,7 +43,7 @@
 }</Value>
     </Setting>
     <Setting Name="ScreenshotSavePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Users\masahiro\OneDrive\my\ElectronicObserver_main\ElectronicObserver\ScreenShot</Value>
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

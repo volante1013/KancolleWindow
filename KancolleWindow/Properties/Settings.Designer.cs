@@ -112,8 +112,7 @@ namespace KancolleWindow.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Users\\masahiro\\OneDrive\\my\\ElectronicObserver_main\\ElectronicObserver\\ScreenSh" +
-            "ot")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string ScreenshotSavePath {
             get {
                 return ((string)(this["ScreenshotSavePath"]));
