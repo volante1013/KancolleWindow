@@ -259,3 +259,9 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/Kancolle_htmlsource1.html
+/Kancolle_htmlsource2.html
+/Kancolle_htmlsource3.html
+/saveCanvas.js
+/UserStyleSheet.txt
+/zoomLevelについて.txt

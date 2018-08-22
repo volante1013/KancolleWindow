@@ -1,7 +1,49 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="KancolleWindow.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="WindowWidth" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="WindowHeight" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="WindowLeft" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="WindowTop" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="WindowMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="KancolleUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/</Value>
+    </Setting>
+    <Setting Name="UserStyleSheet" Type="System.String" Scope="User">
+      <Value Profile="(Default)">body {
+    margin:0;
+    overflow:hidden
+}
+
+#game_frame {
+    position:fixed;
+    left:50%;
+    top:-16px;
+    margin-left:-600px;
+    z-index:1
+}
+
+.area-pickupgame,
+.dmm-ntgnavi,
+.naviapp,
+#foot
+{
+    display:none!important;
+}</Value>
+    </Setting>
+    <Setting Name="ScreenshotSavePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Users\masahiro\OneDrive\my\ElectronicObserver_main\ElectronicObserver\ScreenShot</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

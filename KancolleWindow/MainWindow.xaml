@@ -5,8 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KancolleWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="KancolleWindow" Height="777" Width="1216">
     <Grid>
-        
+        <DockPanel x:Name="DockPanel" LastChildFill="True">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="ミュート : OFF" Click="Mute_Click"/>
+                <MenuItem Header="最前面 : OFF" Click="TopMost_Click"/>
+                <MenuItem Header="スクショ" Click="ScreenShot_Click"/>
+                <MenuItem Header="リロード" Click="Reload_Click"/>
+                <MenuItem Header="その他">
+                    <MenuItem Header="AAA"/>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
     </Grid>
 </Window>
