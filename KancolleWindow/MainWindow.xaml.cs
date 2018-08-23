@@ -26,6 +26,16 @@ namespace KancolleWindow
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		// 周りの表示とDMMのダイアログを非表示にする
+		private static readonly string mainFrameUserStyleSheet =
+			$"var style = document.createElement('style'); style.innerHTML = \"{Settings.Default.UserStyleSheet.Replace("\r\n", " ")}\"; document.body.appendChild(style);"
+			+ "try { if (DMM.netgame.reloadDialog) DMM.netgame.reloadDialog = function(){}; } catch(e) { alert('DMMによるページ更新ダイアログの非表示に失敗しました: '+e); }";
+		  //+ "var script = document.createElement('script'); script.innerHTML = \"try { if (DMM.netgame.reloadDialog) DMM.netgame.reloadDialog = function(){}; } catch(e) { alert('DMMによるページ更新ダイアログの非表示に失敗しました: '+e); }\"; document.body.appendChild(script);";
+
+		// 作戦要綱等のUIを消す
+		private static readonly string gameFrameUserStyleSheet = 
+			"var style = document.createElement('style'); style.innerHTML = \"#globalNavi{ display:none!important; }\"; document.body.appendChild(style);";
+
 		private static readonly Size KancolleSize = new Size(1200, 720);
 
 		private ChromiumWebBrowser cefBrowser;
@@ -48,37 +58,20 @@ namespace KancolleWindow
 
 			volumeManager = new VolumeManager((uint)Process.GetCurrentProcess().Id);
 
-			cefBrowser = new ChromiumWebBrowser { Address = Settings.Default.KancolleUrl, RequestHandler = new ResourceHandler() };
+			cefBrowser = new ChromiumWebBrowser { Address = Settings.Default.KancolleUrl };
 			cefBrowser.FrameLoadEnd += (sender, args) =>
 			{
-				if (args.Frame?.IsMain == false)
+				Debug.WriteLine($"FrameName = {args.Frame.Name}");
+
+				if (args.Frame?.IsMain == true && args.Url == Settings.Default.KancolleUrl) 
 				{
-					Debug.WriteLine($"FrameName = {args.Frame.Name}");
-					if (args.Frame?.Name == "game_frame")
-					{
-						var js_ = "var style = document.createElement(\"style\"); style.innerHTML = \"#globalNavi{ display:none!important; }\"; document.body.appendChild(style);";
-						args.Frame.ExecuteJavaScriptAsync(js_);
-					}
-					return;
+					args.Frame.ExecuteJavaScriptAsync(mainFrameUserStyleSheet);
+					this.Dispatcher.Invoke(() => SetZoomLevel(null, null));
 				}
-
-				// KancolleViewer設定
-				var js = $"var style = document.createElement(\"style\"); style.innerHTML = \"{Settings.Default.UserStyleSheet.Replace("\r\n", " ")}\"; document.body.appendChild(style);";
-				args.Frame.ExecuteJavaScriptAsync(js);
-
-				// DMMの更新ダイアログの非表示
-				//js = $"try {{ if (DMM.netgame.reloadDialog) DMM.netgame.reloadDialog = function(){{}};	}} catch (e) {{ alert(\"DMMによるページ更新ダイアログの非表示に失敗しました: \" + e); }}";
-				//args.Frame.ExecuteJavaScriptAsync(js);
-
-				this.Dispatcher.Invoke(() => SetZoomLevel(null, null));
-
-				// demado設定
-				//// 上の表示を消す
-				//args.Frame.ExecuteJavaScriptAsync("document.body.style.position = 'relative'");
-				//args.Frame.ExecuteJavaScriptAsync("document.body.style.left = '0px'");
-				//args.Frame.ExecuteJavaScriptAsync("document.body.style.top = '-77px'");
-				//// スクロールバーを消す
-				//args.Frame.ExecuteJavaScriptAsync("document.querySelector('html').style.overflow = 'hidden'");
+				else if (args.Frame?.Name == "game_frame")
+				{
+					args.Frame.ExecuteJavaScriptAsync(gameFrameUserStyleSheet);
+				}
 			};
 
 			this.SizeChanged += SetZoomLevel;
