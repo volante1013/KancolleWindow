@@ -28,8 +28,8 @@ namespace KancolleWindow
 	{
 		// 周りの表示とDMMのダイアログを非表示にする
 		private static readonly string mainFrameUserStyleSheet =
-			$"var style = document.createElement('style'); style.innerHTML = \"{Settings.Default.UserStyleSheet.Replace("\r\n", " ")}\"; document.body.appendChild(style);"
-			+"try { if (DMM.netgame.reloadDialog) DMM.netgame.reloadDialog = function(){}; } catch(e) { alert('DMMによるページ更新ダイアログの非表示に失敗しました: '+e); }";
+			$"var style = document.createElement('style'); style.innerHTML = \"{Settings.Default.UserStyleSheet.Replace("\r\n", " ")}\"; document.body.appendChild(style); "
+			+"var script = document.createElement('script'); script.innerHTML = \"try { if (DMM.netgame.reloadDialog) DMM.netgame.reloadDialog = function(){}; } catch(e) { alert('DMMによるページ更新ダイアログの非表示に失敗しました: '+e); }\"; document.body.appendChild(script);";
 
 		// 作戦要綱等のUIを消す
 		private static readonly string gameFrameUserStyleSheet = 
@@ -40,6 +40,8 @@ namespace KancolleWindow
 		private ChromiumWebBrowser cefBrowser;
 		private VolumeManager volumeManager;
 
+		private bool IsMute = false;
+
 
 		public MainWindow()
 		{
@@ -47,11 +49,13 @@ namespace KancolleWindow
 
 			InitializeComponent();
 
-			RestoreWindowInfo();
+			RestoreSettings();
+
+			LoadIconResource();
 
 			this.Closing += (_, __) =>
 			{
-				SaveWindowInfo();
+				SaveSettings();
 				Cef.Shutdown();
 			};
 
@@ -97,33 +101,41 @@ namespace KancolleWindow
 		private void Mute_Click(object sender, RoutedEventArgs e)
 		{
 			volumeManager.ToggleMute();
+			IsMute = volumeManager.IsMute;
 
-			var muteItem = sender as MenuItem;
-			muteItem.Header = "ミュート : " + ((volumeManager.IsMute) ? "ON" : "OFF");
+			MuteImg.Source = ResourceManager.Instance.Icons[(IsMute) ? ResourceManager.IconResource.Mute : ResourceManager.IconResource.VolumeHigh];
+			(MuteImg.Parent as Button).ToolTip = "ミュート : " + ((volumeManager.IsMute) ? "ON" : "OFF");
 		}
 
 		private void TopMost_Click(object sender, RoutedEventArgs e)
 		{
 			this.Topmost = !this.Topmost;
 
-			var topmostItem = sender as MenuItem;
-			topmostItem.Header = "最前面 : " + ((this.Topmost) ? "ON" : "OFF");
+			TopmostImg.Source = ResourceManager.Instance.Icons[(this.Topmost) ? ResourceManager.IconResource.TopmostON : ResourceManager.IconResource.TopmostOFF];
+			(TopmostImg.Parent as Button).ToolTip = "最前面 : " + ((this.Topmost) ? "ON" : "OFF");
 		}
 
-		private void ScreenShot_Click(object sender, RoutedEventArgs e)
-		{
-			Screenshot.TaskScreenshot(cefBrowser);
-		}
+		private void ScreenShot_Click(object sender, RoutedEventArgs e) => Screenshot.TaskScreenshot(cefBrowser);
 
-		private void Reload_Click(object sender, RoutedEventArgs e)
+		private void Reload_Click(object sender, RoutedEventArgs e) => cefBrowser.GetBrowser().Reload();
+
+		/// <summary>
+		/// ToolBarTrayのOverflowを削除する
+		/// </summary>
+		private void ToolBar_Loaded(object sender, RoutedEventArgs e)
 		{
-			cefBrowser.GetBrowser().Reload();
+			ToolBar toolBar = sender as ToolBar;
+			var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
+			if (overflowGrid != null)
+			{
+				overflowGrid.Visibility = Visibility.Collapsed;
+			}
 		}
 
 		#endregion
 
 		#region private関数
-		private void RestoreWindowInfo()
+		private void RestoreSettings()
 		{
 			var s = Settings.Default;
 			if (s.WindowLeft >= 0 && s.WindowLeft + s.WindowWidth < SystemParameters.VirtualScreenWidth)
@@ -136,9 +148,12 @@ namespace KancolleWindow
 				Height = s.WindowHeight;
 			if (s.WindowMaximized)
 				Loaded += (_, __) => WindowState = WindowState.Maximized;
+
+			this.Topmost = s.IsTopmost;
+			IsMute = s.IsMute;
 		}
 
-		private void SaveWindowInfo()
+		private void SaveSettings()
 		{
 			var s = Settings.Default;
 			s.WindowMaximized = WindowState == WindowState.Maximized;
@@ -146,6 +161,10 @@ namespace KancolleWindow
 			s.WindowTop = Top;
 			s.WindowWidth = Width;
 			s.WindowHeight = Height;
+
+			s.IsTopmost = this.Topmost;
+			s.IsMute = IsMute;
+
 			s.Save();
 		}
 
@@ -157,14 +176,18 @@ namespace KancolleWindow
 
 			double zoomRate = Math.Min(cefBrowser.ActualWidth / KancolleSize.Width, cefBrowser.ActualHeight / KancolleSize.Height);
 			cefBrowser.ZoomLevel = Math.Log(zoomRate, 1.2);
-
-			Debug.WriteLine($"zoomRate = {zoomRate}, zoomLevel = {cefBrowser.ZoomLevel}");
-			Debug.WriteLine($"Window : ActualW = {this.ActualWidth}, ActualH = {this.ActualHeight}");
-			Debug.WriteLine($"Browser : ActualW = {cefBrowser.ActualWidth}, ActualH = {cefBrowser.ActualHeight}");
 		}
 
+		private void LoadIconResource()
+		{
+			ResourceManager.Instance.Load();
+
+			MuteImg.Source = ResourceManager.Instance.Icons[(IsMute) ? ResourceManager.IconResource.Mute : ResourceManager.IconResource.VolumeHigh];
+			TopmostImg.Source = ResourceManager.Instance.Icons[(this.Topmost) ? ResourceManager.IconResource.TopmostON : ResourceManager.IconResource.TopmostOFF];
+			ReloadImg.Source = ResourceManager.Instance.Icons[ResourceManager.IconResource.Reload];
+			ScshoImg.Source = ResourceManager.Instance.Icons[ResourceManager.IconResource.Screenshot];
+			SetImg.Source = ResourceManager.Instance.Icons[ResourceManager.IconResource.Settings];
+		}
 		#endregion
-
-
 	}
 }

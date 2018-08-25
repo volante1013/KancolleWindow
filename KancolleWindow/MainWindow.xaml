@@ -8,15 +8,33 @@
         Title="KancolleWindow" Height="777" Width="1216">
     <Grid>
         <DockPanel x:Name="DockPanel" LastChildFill="True">
-            <Menu DockPanel.Dock="Top">
-                <MenuItem Header="ミュート : OFF" Click="Mute_Click"/>
-                <MenuItem Header="最前面 : OFF" Click="TopMost_Click"/>
-                <MenuItem Header="スクショ" Click="ScreenShot_Click"/>
-                <MenuItem Header="リロード" Click="Reload_Click"/>
-                <MenuItem Header="その他">
-                    <MenuItem Header="AAA"/>
-                </MenuItem>
-            </Menu>
+            <ToolBarTray IsLocked="True" Orientation="Vertical" Background="White">
+                <ToolBar IsOverflowOpen="False" Loaded="ToolBar_Loaded" Background="White">
+                    <Button ToolTip="ミュート" Click="Mute_Click">
+                        <Image Name="MuteImg" Width="20" Height="20"/>
+                    </Button>
+                    <Button ToolTip="最前面" Click="TopMost_Click">
+                        <Image Name="TopmostImg" Width="20" Height="20"/>
+                    </Button>
+                    <Button ToolTip="スクショ" Click="ScreenShot_Click">
+                        <Image Name="ScshoImg" Width="20" Height="20"/>
+                    </Button>
+                    <Button ToolTip="リロード" Click="Reload_Click">
+                        <Image Name="ReloadImg" Width="20" Height="20"/>
+                    </Button>
+                    <Separator/>
+                    <Menu Background="White">
+                        <MenuItem ToolTip="その他">
+                            <MenuItem.Header>
+                                <StackPanel>
+                                    <Image Name="SetImg" Width="20" Height="20"/>
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem Header="スクショ保存場所の設定"/>
+                        </MenuItem>
+                    </Menu>
+                </ToolBar>
+            </ToolBarTray>
         </DockPanel>
     </Grid>
 </Window>
