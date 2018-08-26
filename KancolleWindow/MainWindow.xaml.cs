@@ -61,7 +61,12 @@ namespace KancolleWindow
 
 			volumeManager = new VolumeManager((uint)Process.GetCurrentProcess().Id);
 
-			cefBrowser = new ChromiumWebBrowser { Address = Settings.Default.KancolleUrl, MenuHandler = new ContextMenuHandler() };
+			cefBrowser = new ChromiumWebBrowser
+			{
+				Address = Settings.Default.KancolleUrl,
+				RequestHandler = new HttpResourceHandler(),
+				MenuHandler = new ContextMenuHandler()
+			};
 			cefBrowser.FrameLoadEnd += (sender, args) =>
 			{
 				if (args.Frame?.IsMain == true && args.Url == Settings.Default.KancolleUrl) 

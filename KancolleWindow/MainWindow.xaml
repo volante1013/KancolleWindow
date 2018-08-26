@@ -11,23 +11,23 @@
             <ToolBarTray IsLocked="True" Orientation="Vertical" Background="White">
                 <ToolBar IsOverflowOpen="False" Loaded="ToolBar_Loaded" Background="White">
                     <Button ToolTip="ミュート" Click="Mute_Click">
-                        <Image Name="MuteImg" Width="20" Height="20"/>
+                        <Image Name="MuteImg" Width="16" Height="16"/>
                     </Button>
                     <Button ToolTip="最前面" Click="TopMost_Click">
-                        <Image Name="TopmostImg" Width="20" Height="20"/>
+                        <Image Name="TopmostImg" Width="16" Height="16"/>
                     </Button>
                     <Button ToolTip="スクショ" Click="ScreenShot_Click">
-                        <Image Name="ScshoImg" Width="20" Height="20"/>
+                        <Image Name="ScshoImg" Width="16" Height="16"/>
                     </Button>
                     <Button ToolTip="リロード" Click="Reload_Click">
-                        <Image Name="ReloadImg" Width="20" Height="20"/>
+                        <Image Name="ReloadImg" Width="16" Height="16"/>
                     </Button>
                     <Separator/>
                     <Menu Background="White">
                         <MenuItem ToolTip="その他">
                             <MenuItem.Header>
                                 <StackPanel>
-                                    <Image Name="SetImg" Width="20" Height="20"/>
+                                    <Image Name="SetImg" Width="16" Height="16"/>
                                 </StackPanel>
                             </MenuItem.Header>
                             <MenuItem Header="スクショ保存場所の設定"/>
